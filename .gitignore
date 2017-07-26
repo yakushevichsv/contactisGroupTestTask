@@ -1,0 +1,8 @@
+# Autosave files
+*~
+
+# build
+[Oo]bj/
+[Bb]in/
+
+ContactisGroupTestTask/ContactisGroupTestTask.xcodeproj/xcuserdata/
