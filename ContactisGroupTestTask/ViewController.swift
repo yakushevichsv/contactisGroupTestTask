@@ -9,10 +9,18 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    var analyzer:TextAnalyzer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+    
+        analyzer = TextAnalyzer(expression: "one plus three")
+        
+        debugPrint("Analyzer analyze")
+        analyzer.analyze { 
+            debugPrint("Analyzer Finished")
+        }
     }
 
     override func didReceiveMemoryWarning() {

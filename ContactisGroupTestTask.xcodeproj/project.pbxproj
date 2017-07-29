@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A6010CC61F2A7071004722B4 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6010CC51F2A7071004722B4 /* StringExtensions.swift */; };
+		A6010CC71F2A7071004722B4 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6010CC51F2A7071004722B4 /* StringExtensions.swift */; };
+		A61D85011F292C6300AB9BFB /* TextAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61D85001F292C6300AB9BFB /* TextAnalyzer.swift */; };
+		A61D85021F292C6300AB9BFB /* TextAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61D85001F292C6300AB9BFB /* TextAnalyzer.swift */; };
 		A676845E1F291DE100F280B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A676845D1F291DE100F280B9 /* AppDelegate.swift */; };
 		A67684601F291DE100F280B9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A676845F1F291DE100F280B9 /* ViewController.swift */; };
 		A67684631F291DE100F280B9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A67684611F291DE100F280B9 /* Main.storyboard */; };
@@ -26,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A6010CC51F2A7071004722B4 /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringExtensions.swift; path = Extensions/StringExtensions.swift; sourceTree = "<group>"; };
+		A61D85001F292C6300AB9BFB /* TextAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextAnalyzer.swift; path = Model/TextAnalyzer.swift; sourceTree = "<group>"; };
 		A676845A1F291DE100F280B9 /* ContactisGroupTestTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactisGroupTestTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A676845D1F291DE100F280B9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A676845F1F291DE100F280B9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +62,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A6010CC41F2A705C004722B4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A6010CC51F2A7071004722B4 /* StringExtensions.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		A61D84FE1F292BE100AB9BFB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A61D84FF1F292C0900AB9BFB /* TextAnalyzer */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		A61D84FF1F292C0900AB9BFB /* TextAnalyzer */ = {
+			isa = PBXGroup;
+			children = (
+				A61D85001F292C6300AB9BFB /* TextAnalyzer.swift */,
+			);
+			name = TextAnalyzer;
+			sourceTree = "<group>";
+		};
 		A67684511F291DE100F280B9 = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +107,8 @@
 		A676845C1F291DE100F280B9 /* ContactisGroupTestTask */ = {
 			isa = PBXGroup;
 			children = (
+				A6010CC41F2A705C004722B4 /* Extensions */,
+				A61D84FE1F292BE100AB9BFB /* Model */,
 				A676845D1F291DE100F280B9 /* AppDelegate.swift */,
 				A676845F1F291DE100F280B9 /* ViewController.swift */,
 				A67684611F291DE100F280B9 /* Main.storyboard */,
@@ -201,7 +233,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6010CC61F2A7071004722B4 /* StringExtensions.swift in Sources */,
 				A67684601F291DE100F280B9 /* ViewController.swift in Sources */,
+				A61D85011F292C6300AB9BFB /* TextAnalyzer.swift in Sources */,
 				A676845E1F291DE100F280B9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,6 +244,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6010CC71F2A7071004722B4 /* StringExtensions.swift in Sources */,
+				A61D85021F292C6300AB9BFB /* TextAnalyzer.swift in Sources */,
 				A67684731F291DE100F280B9 /* ContactisGroupTestTaskTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,6 +450,7 @@
 				A67684791F291DE100F280B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A676847A1F291DE100F280B9 /* Build configuration list for PBXNativeTarget "ContactisGroupTestTaskTests" */ = {
 			isa = XCConfigurationList;
@@ -422,6 +459,7 @@
 				A676847C1F291DE100F280B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
