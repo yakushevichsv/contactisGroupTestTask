@@ -146,23 +146,18 @@ class TextAnalyzer {
         self.queue.async { [weak self] in
             guard let sSelf = self else { return}
             
-            let objects = sSelf.createArithmeticExpressions()
-            let result = sSelf.process(arithmeticObjects: objects)
+            let result = sSelf.analyzeInner()
             completion(result)
         }
     }
     
+    func analyzeInner() -> TextAnalyzer.NumberType {
+        let objects = createArithmeticExpressions()
+        let result = process(arithmeticObjects: objects)
+        return result
+    }
+    
     func createArithmeticExpressions() -> [ArithmeticObject] {
-        
-        /*let textStr = NSString(string: sSelf.text)
-         let range = NSRange(location: 0, length: textStr.length)
-         sSelf.tagger.enumerateTags(in: range, scheme: sSelf.tagger.tagSchemes.first!, options: sSelf.options, using: { (tag, tagRange, sentenceRange, ptr) in
-         
-         debugPrint("Tag \(tag) tagRange \(NSStringFromRange(tagRange)) sentenceRange \(NSStringFromRange(sentenceRange)) \n")
-         })
-         
-         completion() */
-        
         //remove "whitespace"
         let pText = self.text.condensedWhitespace.replacingOccurrences(of: "-", with: " ") //fifty-nine
         
@@ -373,9 +368,12 @@ class TextAnalyzer {
                 
                 let subRange = objects[prevRange..<rangeValue.range.lowerBound]
                 newObjects.append(contentsOf: subRange)
-                
-                prevRange = objects.index(after: rangeValue.range.upperBound)
+                newObjects.append(ArithmeticObject.value(value: rangeValue.value))
+                prevRange = objects.index(after: rangeValue.range.upperBound).advanced(by: 1)
             }
+            
+            let subRange = objects[prevRange..<objects.endIndex]
+            newObjects.append(contentsOf: subRange)
         }
         
         if let opIndexes2 = detect(inObjects: newObjects).first {
@@ -438,9 +436,10 @@ class TextAnalyzer {
         let endIndex = indexes.endIndex
         
         var prevValue: TextAnalyzer.NumberType! = nil
-        var prevIndex = startIndex
         
         var index = startIndex
+        var innerIndex = objects.startIndex
+        var prevIndex = innerIndex
         
         var groupIndex: Array<Operators>.Index! = nil
         
@@ -450,7 +449,9 @@ class TextAnalyzer {
             
             var defValue: TextAnalyzer.NumberType! = nil
             
-            if let op = objects[index].accessOperation() {
+            innerIndex = indexes[index]
+            
+            if let op = objects[innerIndex].accessOperation() {
                 
                 switch op {
                 case .multiply: fallthrough
@@ -466,39 +467,41 @@ class TextAnalyzer {
             
             var lValue: TextAnalyzer.NumberType! = nil
                 
-            if (index - prevIndex == 2) {
+            if (innerIndex - prevIndex == 2) {
                 lValue = prevValue
                 
             }
             else  {
                 
                 if (groupIndex != nil) {
-                    result.append((range: groupIndex..<index, value: prevValue))
+                    result.append((range: groupIndex..<innerIndex, value: prevValue))
                     
                     groupIndex = nil
                 }
                 
                 lValue = defValue
+                
+                if (innerIndex != objects.startIndex) {
+                    let tIndex = objects.index(before: innerIndex)
+                    
+                    if (groupIndex == nil) {
+                        groupIndex = tIndex
+                    }
+                    
+                    if let value = objects[tIndex].accessValue() {
+                        lValue = value
+                    }
+                    else {
+                        debugPrint("Warning!")
+                    }
+                }
             }
             
-            if (index != startIndex) {
-                let tIndex = objects.index(before: index)
-                
-                if (groupIndex == nil) {
-                    groupIndex = tIndex
-                }
-                
-                if let value = objects[tIndex].accessValue() {
-                    lValue = value
-                }
-                else {
-                    debugPrint("Warning!")
-                }
-            }
+            
             
             var rValue = defValue
-            if (index != endIndex) {
-                let tIndex = objects.index(after: index)
+            if (innerIndex != objects.endIndex) {
+                let tIndex = objects.index(after: innerIndex)
                 if let value = objects[tIndex].accessValue() {
                     rValue = value
                 }
@@ -509,7 +512,7 @@ class TextAnalyzer {
             
             var result = TextAnalyzer.NumberType(0)
             
-            if let op = objects[index].accessOperation(), let r = rValue, let l = lValue {
+            if let op = objects[innerIndex].accessOperation(), let r = rValue, let l = lValue {
                 
                 switch op {
                 case .multiply:
@@ -528,13 +531,13 @@ class TextAnalyzer {
             }
             
             prevValue = result
-            prevIndex = index
+            prevIndex = innerIndex
             
-            index = objects.index(after: index)
+            index = indexes.index(after: index)
         }
         
         if (groupIndex != nil) {
-            result.append((range: groupIndex..<index, value: prevValue))
+            result.append((range: groupIndex..<innerIndex, value: prevValue))
             
             groupIndex = nil
         }

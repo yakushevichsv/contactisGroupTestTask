@@ -112,6 +112,39 @@ class ContactisGroupTestTaskTests: XCTestCase {
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
+    //MARK: - Check AnalyzerInner
+    
+    func testAnalyzeInnerSimpleCase() {
+        let analyzer = TextAnalyzer(expression: "three minus one multiply by four") // 3 - 1 * 4
+        let value = analyzer.analyzeInner()
+        XCTAssertTrue(value == -1, "Not equal -1")
+    }
+    
+    func testAnalyzeInnerMinusPlusGroupCase() {
+        let analyzer = TextAnalyzer(expression: "ten minus five minus three minus thirty three") // 10 - 5 - 3 - 33
+        let value = analyzer.analyzeInner()
+        XCTAssertTrue(value == -31, "Not equal -31")
+    }
+    
+    func testAnalyzeInnerMultDivGroupCase() {
+        let analyzer = TextAnalyzer(expression: "seventy one multiply by seventy two divide by twenty four") // 71 *72/24
+        let value = analyzer.analyzeInner()
+        XCTAssertTrue(value == 213, "Not equal 213")
+    }
+    
+    func testAnalyzeInnerDifferentGroupsCase() {
+        let analyzer = TextAnalyzer(expression: "fifty-six minus two multiply by forty multiply by five plus six minus seven") // 56 - 2 * 40 * 5 + 6 - 7
+        let value = analyzer.analyzeInner()
+        XCTAssertTrue(value == -345, "Not equal -345")
+    }
+    
+    func testAnalyzerInnerLongDifferentGroupsCase() {
+        let analyzer = TextAnalyzer(expression: "One plus One minus two plus three minus three plus ten multiply by ten divide by one hundred") // 1 + 1 - 2 + 3 - 3 + 10 * 10 /100 == 1
+        
+        let value = analyzer.analyzeInner()
+        XCTAssertTrue(value == 1, "Not equal to one!")
+    }
+    
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
