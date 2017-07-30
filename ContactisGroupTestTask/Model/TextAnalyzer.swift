@@ -8,96 +8,10 @@
 
 import Foundation
 
-enum ArithmeticExpression: Equatable {
-    case unknown
-    case operation(operation: Operation)
-    case value(value: TextAnalyzer.NumberType)
-    
-    public static func == (lhs: ArithmeticExpression, rhs: ArithmeticExpression) -> Bool {
-        let op1 = lhs.accessOperation()
-        let op2 = rhs.accessOperation()
-        
-        if let o1 = op1, let o2 = op2 {
-            return o1 == o2
-        }
-        
-        let v1Ptr = lhs.accessValue()
-        let v2Ptr = rhs.accessValue()
-        
-        if let v1 = v1Ptr, let v2 = v2Ptr {
-            return v1 == v2
-        }
-        return false
-    }
-    
-    func accessOperation() -> Operation? {
-        switch self {
-        case .operation(let op):
-            return op
-        default:
-            return nil
-        }
-    }
-    
-    func accessValue() -> TextAnalyzer.NumberType? {
-        switch self {
-        case .value(let value):
-            return value
-        default:
-            return nil
-        }
-    }
-}
-
-enum Operation: String, RawRepresentable {
-    typealias RawValue = String
-
-    case plus
-    case minus
-    case multiply
-    case divide
-    
-    public init?(rawValue: RawValue) {
-       switch rawValue {
-        case "plus":
-            self = .plus
-        break
-        case "minus":
-            self = .minus
-            break
-        case "multiply": fallthrough
-        case "multiply by":
-            self = .multiply
-            break
-        case "divide": fallthrough
-        case "divide by":
-            self = .divide
-            break
-        default:
-            return nil
-        }
-    }
-    
-    var rawValue: RawValue {
-        switch self {
-        case .plus:
-            return "plus"
-        case .minus:
-            return "minus"
-        case .multiply:
-            return "multiply"
-        case .divide:
-            return "divide"
-        }
-    }
-}
-
 //MARK: - TextAnalyzer
 class TextAnalyzer {
     let text: String
-    let tagger: NSLinguisticTagger
     let queue: DispatchQueue
-    let options = NSLinguisticTagger.Options.omitPunctuation.union(NSLinguisticTagger.Options.omitWhitespace)
     
     let basicNumbers : [String: TextAnalyzer.NumberType] = ["one": 1,
                "two": 2,
@@ -139,7 +53,6 @@ class TextAnalyzer {
     init(expression text:String) {
         self.text = text.lowercased()
         self.queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
-        self.tagger = NSLinguisticTagger(tagSchemes: [NSLinguisticTagSchemeLexicalClass], options: Int(options.rawValue))
     }
     
     func analyze(completion:@escaping ((_ value: TextAnalyzer.NumberType)->Void)) {
@@ -233,13 +146,6 @@ class TextAnalyzer {
                 
                 let needResetPrev = multipliers.endIndex != multiplierIndex ? multipliers[multiplierIndex] == multiplier : true
                 
-                /*if (i != components.count - 1 ) {
-                    let next = components[i+1]
-                    if (next == "and" /*|| self.basicNumbers[next] != nil*/) {
-                        needResetPrev = false
-                    }
-                }*/
-                
                 if needResetPrev {
                     if multipliers.endIndex != multiplierIndex {
                         multiplierIndex = multipliers.index(after: multiplierIndex)
@@ -306,8 +212,6 @@ class TextAnalyzer {
                     }
                     
                 }
-                
-                //objects.append(tempObject)
             }
             else if component == "by" ||
                     component == "and" { // multiply by , divide by, one million and

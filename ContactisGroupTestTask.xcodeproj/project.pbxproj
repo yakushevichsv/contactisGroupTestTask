@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		A6010CC61F2A7071004722B4 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6010CC51F2A7071004722B4 /* StringExtensions.swift */; };
 		A6010CC71F2A7071004722B4 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6010CC51F2A7071004722B4 /* StringExtensions.swift */; };
+		A608CD131F2E6F5000812824 /* ArithmeticExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A608CD121F2E6F5000812824 /* ArithmeticExpression.swift */; };
+		A608CD141F2E6F5000812824 /* ArithmeticExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A608CD121F2E6F5000812824 /* ArithmeticExpression.swift */; };
+		A608CD161F2E6F7400812824 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A608CD151F2E6F7400812824 /* Operation.swift */; };
+		A608CD171F2E6F7400812824 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A608CD151F2E6F7400812824 /* Operation.swift */; };
 		A61D85011F292C6300AB9BFB /* TextAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61D85001F292C6300AB9BFB /* TextAnalyzer.swift */; };
 		A61D85021F292C6300AB9BFB /* TextAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61D85001F292C6300AB9BFB /* TextAnalyzer.swift */; };
 		A676845E1F291DE100F280B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A676845D1F291DE100F280B9 /* AppDelegate.swift */; };
@@ -31,6 +35,8 @@
 
 /* Begin PBXFileReference section */
 		A6010CC51F2A7071004722B4 /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringExtensions.swift; path = Extensions/StringExtensions.swift; sourceTree = "<group>"; };
+		A608CD121F2E6F5000812824 /* ArithmeticExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArithmeticExpression.swift; path = Operations/ArithmeticExpression.swift; sourceTree = "<group>"; };
+		A608CD151F2E6F7400812824 /* Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Operation.swift; path = Operations/Operation.swift; sourceTree = "<group>"; };
 		A61D85001F292C6300AB9BFB /* TextAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextAnalyzer.swift; path = Model/TextAnalyzer.swift; sourceTree = "<group>"; };
 		A676845A1F291DE100F280B9 /* ContactisGroupTestTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactisGroupTestTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A676845D1F291DE100F280B9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,9 +76,19 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		A608CD111F2E6F1500812824 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				A608CD121F2E6F5000812824 /* ArithmeticExpression.swift */,
+				A608CD151F2E6F7400812824 /* Operation.swift */,
+			);
+			name = Operations;
+			sourceTree = "<group>";
+		};
 		A61D84FE1F292BE100AB9BFB /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A608CD111F2E6F1500812824 /* Operations */,
 				A61D84FF1F292C0900AB9BFB /* TextAnalyzer */,
 			);
 			name = Model;
@@ -233,10 +249,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A608CD131F2E6F5000812824 /* ArithmeticExpression.swift in Sources */,
 				A6010CC61F2A7071004722B4 /* StringExtensions.swift in Sources */,
 				A67684601F291DE100F280B9 /* ViewController.swift in Sources */,
 				A61D85011F292C6300AB9BFB /* TextAnalyzer.swift in Sources */,
 				A676845E1F291DE100F280B9 /* AppDelegate.swift in Sources */,
+				A608CD161F2E6F7400812824 /* Operation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +265,8 @@
 				A6010CC71F2A7071004722B4 /* StringExtensions.swift in Sources */,
 				A61D85021F292C6300AB9BFB /* TextAnalyzer.swift in Sources */,
 				A67684731F291DE100F280B9 /* ContactisGroupTestTaskTests.swift in Sources */,
+				A608CD171F2E6F7400812824 /* Operation.swift in Sources */,
+				A608CD141F2E6F5000812824 /* ArithmeticExpression.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
