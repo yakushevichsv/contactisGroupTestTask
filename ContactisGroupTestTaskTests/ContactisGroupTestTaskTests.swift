@@ -21,6 +21,97 @@ class ContactisGroupTestTaskTests: XCTestCase {
         super.tearDown()
     }
     
+    //MARK: - Simple operations
+    
+    func testCreateArithmeticExpressionsSimplePlus() {
+        let analyzer = TextAnalyzer(expression: "one plus two") // 1 + 2
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 1), ArithmeticObject.operator(operators: Operators.plus), ArithmeticObject.value(value: 2)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    
+    func testCreateArithmeticExpressionsSimpleMinus() {
+        let analyzer = TextAnalyzer(expression: "two minus four") // 2 - 4
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.minus), ArithmeticObject.value(value: 4)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    
+    func testCreateArithmeticExpressionsSimpleMultiply() {
+        let analyzer = TextAnalyzer(expression: "two multiply four") // 2 * 4
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.multiply), ArithmeticObject.value(value: 4)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    
+    func testCreateArithmeticExpressionsSimpleMultiplyBy() {
+        let analyzer = TextAnalyzer(expression: "two multiply by four") // 2 * 4
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.multiply), ArithmeticObject.value(value: 4)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    func testCreateArithmeticExpressionsSimpleDivide() {
+        let analyzer = TextAnalyzer(expression: "two divide four") // 2 / 4
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.divide), ArithmeticObject.value(value: 4)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    
+    func testCreateArithmeticExpressionsSimpleDivideBy() {
+        let analyzer = TextAnalyzer(expression: "two divide by four") // 2 / 4
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.divide), ArithmeticObject.value(value: 4)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    //MARK: - Process Real number 
+    
+    func testCreateArithmeticExpressionFromRealNumber() {
+        
+        let analyzer = TextAnalyzer(expression: "One hundred and twenty three millions four hundred fifty six thousand seven hundred eighty nine") //123 456 789
+        
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 1, "Not one item!")
+        XCTAssertEqual(expressions.first?.accessValue(), 123456789)
+    }
+    
+    func testCreateSimpleSumFrom2RealNumbers() {
+        let analyzer = TextAnalyzer(expression: "One hundred one million ten thousand one hundred one multiply by twenty-three plus four hundred") //101 010 101 * 23 + 400
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 5, "Not 3 item!")
+        let expectedExpressions = [ArithmeticObject.value(value: 101010101), ArithmeticObject.operator(operators: Operators.multiply), ArithmeticObject.value(value: 23), ArithmeticObject.operator(operators: Operators.plus),ArithmeticObject.value(value: 400)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    //MARK: - Remove fake signs
+    
+    func testCreateArithmeticExpressionsRemoveFakeFirstPlus() {
+        let analyzer = TextAnalyzer(expression: "plus one plus two") // + 1 + 2
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 1), ArithmeticObject.operator(operators: Operators.plus), ArithmeticObject.value(value: 2)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
+    func testCreateArithmeticExpressionsRemoveFakeLastPlus() {
+        let analyzer = TextAnalyzer(expression: "three plus minus two") // 3 +- 2
+        let expressions = analyzer.createArithmeticExpressions()
+        XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
+        let expectedExpressions = [ArithmeticObject.value(value: 3), ArithmeticObject.operator(operators: Operators.plus), ArithmeticObject.value(value: -2)]
+        XCTAssertEqual(expressions, expectedExpressions)
+    }
+    
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.

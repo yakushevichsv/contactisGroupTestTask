@@ -15,12 +15,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     
-        analyzer = TextAnalyzer(expression: "one plus three")
+        /*analyzer = TextAnalyzer(expression: "one plus three")
         
         debugPrint("Analyzer analyze")
-        analyzer.analyze { 
+        analyzer.analyze { result in
             debugPrint("Analyzer Finished")
-        }
+        }*/
     }
 
     override func didReceiveMemoryWarning() {
