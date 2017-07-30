@@ -8,12 +8,12 @@
 
 import Foundation
 
-enum ArithmeticObject: Equatable {
+enum ArithmeticExpression: Equatable {
     case unknown
-    case `operator`(operators:Operators)
+    case operation(operation: Operation)
     case value(value: TextAnalyzer.NumberType)
     
-    public static func == (lhs: ArithmeticObject, rhs: ArithmeticObject) -> Bool {
+    public static func == (lhs: ArithmeticExpression, rhs: ArithmeticExpression) -> Bool {
         let op1 = lhs.accessOperation()
         let op2 = rhs.accessOperation()
         
@@ -30,9 +30,9 @@ enum ArithmeticObject: Equatable {
         return false
     }
     
-    func accessOperation() -> Operators? {
+    func accessOperation() -> Operation? {
         switch self {
-        case .operator(let op):
+        case .operation(let op):
             return op
         default:
             return nil
@@ -49,7 +49,7 @@ enum ArithmeticObject: Equatable {
     }
 }
 
-enum Operators: String, RawRepresentable {
+enum Operation: String, RawRepresentable {
     typealias RawValue = String
 
     case plus
@@ -134,7 +134,7 @@ class TextAnalyzer {
                              "trillions" : 1e+12 ]
     
     typealias NumberType = Double
-    typealias NumbersGroupTuple = (value1: NumberType?, value2: NumberType?, operation: Operators?)
+    typealias NumbersGroupTuple = (value1: NumberType?, value2: NumberType?, operation: Operation?)
     
     init(expression text:String) {
         self.text = text.lowercased()
@@ -153,11 +153,11 @@ class TextAnalyzer {
     
     func analyzeInner() -> TextAnalyzer.NumberType {
         let objects = createArithmeticExpressions()
-        let result = process(arithmeticObjects: objects)
+        let result = process(arithmeticExpressions: objects)
         return result
     }
     
-    func createArithmeticExpressions() -> [ArithmeticObject] {
+    func createArithmeticExpressions() -> [ArithmeticExpression] {
         //remove "whitespace"
         let pText = self.text.condensedWhitespace.replacingOccurrences(of: "-", with: " ") //fifty-nine
         
@@ -190,10 +190,10 @@ class TextAnalyzer {
         var value: NumberType? = nil
         var minusDetectedCount = 0
         var isPositive = true
-        var prevOperation: ArithmeticObject? = nil
+        var prevOperation: ArithmeticExpression? = nil
         var prevPartValue: NumberType? = nil
         
-        var objects = [ArithmeticObject]()
+        var objects = [ArithmeticExpression]()
         
         for i in components.startIndex..<components.endIndex {
             let component = components[i]
@@ -255,8 +255,8 @@ class TextAnalyzer {
                     prevPartValue = nil
                 }
             }
-            else if let operation = Operators(rawValue: component){
-                prevOperation = ArithmeticObject.operator(operators: operation)
+            else if let operation = Operation(rawValue: component){
+                prevOperation = ArithmeticExpression.operation(operation: operation)
                 
                 if (detectingNumber) {
                     
@@ -278,7 +278,7 @@ class TextAnalyzer {
                         isPositive = true
                     }
                     
-                    let tempValue = ArithmeticObject.value(value: value!)
+                    let tempValue = ArithmeticExpression.value(value: value!)
                     objects.append(tempValue)
                     detectingNumber = false
                 }
@@ -286,12 +286,12 @@ class TextAnalyzer {
                     if (minusDetectedCount == 0) {
                         minusDetectedCount += 1
                         isPositive = false
-                        prevOperation = ArithmeticObject.operator(operators: Operators.plus)
+                        prevOperation = ArithmeticExpression.operation(operation: Operation.plus)
                     }
                     else {
                         isPositive = true
                         debugPrint("WARNING double minus detected!")
-                        prevOperation = ArithmeticObject.operator(operators: Operators.plus)
+                        prevOperation = ArithmeticExpression.operation(operation: Operation.plus)
                     }
                 }
                 else  {
@@ -300,7 +300,7 @@ class TextAnalyzer {
                     if operation == .plus {
                         if (!isPositive) {
                             //Store minus....
-                            prevOperation = ArithmeticObject.operator(operators: Operators.minus)
+                            prevOperation = ArithmeticExpression.operation(operation: Operation.minus)
                             isPositive = true
                         }
                     }
@@ -338,7 +338,7 @@ class TextAnalyzer {
                 isPositive = true
             }
             
-            let tempValue = ArithmeticObject.value(value: value!)
+            let tempValue = ArithmeticExpression.value(value: value!)
             objects.append(tempValue)
             detectingNumber = false
         }
@@ -350,10 +350,10 @@ class TextAnalyzer {
         return objects
     }
     
-    func process(arithmeticObjects objects: [ArithmeticObject]) -> TextAnalyzer.NumberType {
+    func process(arithmeticExpressions objects: [ArithmeticExpression]) -> TextAnalyzer.NumberType {
         let opIndexes = detect(inObjects: objects)
         
-        var newObjects: [ArithmeticObject] = []
+        var newObjects: [ArithmeticExpression] = []
         
         var result = TextAnalyzer.NumberType(0)
         
@@ -368,7 +368,7 @@ class TextAnalyzer {
                 
                 let subRange = objects[prevRange..<rangeValue.range.lowerBound]
                 newObjects.append(contentsOf: subRange)
-                newObjects.append(ArithmeticObject.value(value: rangeValue.value))
+                newObjects.append(ArithmeticExpression.value(value: rangeValue.value))
                 prevRange = objects.index(after: rangeValue.range.upperBound).advanced(by: 1)
             }
             
@@ -390,12 +390,12 @@ class TextAnalyzer {
         
     }
     
-    func detect(inObjects objects:[ArithmeticObject]) -> [[Array<Operators>.Index]] { //multiply, divide -> plus, minus...
+    func detect(inObjects objects:[ArithmeticExpression]) -> [[Array<Operation>.Index]] { //multiply, divide -> plus, minus...
         
         var index = objects.startIndex
         
-        var firstLevel: [Array<Operators>.Index] = []
-        var secondLevel: [Array<Operators>.Index] = []
+        var firstLevel: [Array<Operation>.Index] = []
+        var secondLevel: [Array<Operation>.Index] = []
         
         while (index != objects.endIndex) {
             
@@ -417,7 +417,7 @@ class TextAnalyzer {
             index = objects.index(after: index)
         }
         
-        var result: [[Array<Operators>.Index]] = []
+        var result: [[Array<Operation>.Index]] = []
         
         if (!firstLevel.isEmpty) {
             result.append(firstLevel)
@@ -430,7 +430,7 @@ class TextAnalyzer {
         return result
     }
     
-    func simplify(inObjects objects:[ArithmeticObject], operationIndexes indexes:[Array<Operators>.Index]) -> [(range: Range<Array<Operators>.Index>, value: TextAnalyzer.NumberType) ] {
+    func simplify(inObjects objects:[ArithmeticExpression], operationIndexes indexes:[Array<Operation>.Index]) -> [(range: Range<Array<Operation>.Index>, value: TextAnalyzer.NumberType) ] {
         
         let startIndex = indexes.startIndex
         let endIndex = indexes.endIndex
@@ -441,9 +441,9 @@ class TextAnalyzer {
         var innerIndex = objects.startIndex
         var prevIndex = innerIndex
         
-        var groupIndex: Array<Operators>.Index! = nil
+        var groupIndex: Array<Operation>.Index! = nil
         
-        var result: [(range:Range<Array<Operators>.Index>, value: TextAnalyzer.NumberType)] = []
+        var result: [(range:Range<Array<Operation>.Index>, value: TextAnalyzer.NumberType)] = []
         
         while (index != endIndex) {
             

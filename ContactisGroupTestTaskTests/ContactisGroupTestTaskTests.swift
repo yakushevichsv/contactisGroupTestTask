@@ -27,7 +27,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "one plus two") // 1 + 2
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 1), ArithmeticObject.operator(operators: Operators.plus), ArithmeticObject.value(value: 2)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 1), ArithmeticExpression.operation(operation: Operation.plus), ArithmeticExpression.value(value: 2)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -36,7 +36,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "two minus four") // 2 - 4
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.minus), ArithmeticObject.value(value: 4)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 2), ArithmeticExpression.operation(operation: Operation.minus), ArithmeticExpression.value(value: 4)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -45,7 +45,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "two multiply four") // 2 * 4
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.multiply), ArithmeticObject.value(value: 4)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 2), ArithmeticExpression.operation(operation: Operation.multiply), ArithmeticExpression.value(value: 4)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -54,7 +54,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "two multiply by four") // 2 * 4
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.multiply), ArithmeticObject.value(value: 4)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 2), ArithmeticExpression.operation(operation: Operation.multiply), ArithmeticExpression.value(value: 4)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -62,7 +62,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "two divide four") // 2 / 4
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.divide), ArithmeticObject.value(value: 4)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 2), ArithmeticExpression.operation(operation: Operation.divide), ArithmeticExpression.value(value: 4)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -71,7 +71,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "two divide by four") // 2 / 4
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 2), ArithmeticObject.operator(operators: Operators.divide), ArithmeticObject.value(value: 4)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 2), ArithmeticExpression.operation(operation: Operation.divide), ArithmeticExpression.value(value: 4)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -90,7 +90,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "One hundred one million ten thousand one hundred one multiply by twenty-three plus four hundred") //101 010 101 * 23 + 400
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 5, "Not 3 item!")
-        let expectedExpressions = [ArithmeticObject.value(value: 101010101), ArithmeticObject.operator(operators: Operators.multiply), ArithmeticObject.value(value: 23), ArithmeticObject.operator(operators: Operators.plus),ArithmeticObject.value(value: 400)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 101010101), ArithmeticExpression.operation(operation: Operation.multiply), ArithmeticExpression.value(value: 23), ArithmeticExpression.operation(operation: Operation.plus),ArithmeticExpression.value(value: 400)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -100,7 +100,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "plus one plus two") // + 1 + 2
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 1), ArithmeticObject.operator(operators: Operators.plus), ArithmeticObject.value(value: 2)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 1), ArithmeticExpression.operation(operation: Operation.plus), ArithmeticExpression.value(value: 2)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
@@ -108,7 +108,7 @@ class ContactisGroupTestTaskTests: XCTestCase {
         let analyzer = TextAnalyzer(expression: "three plus minus two") // 3 +- 2
         let expressions = analyzer.createArithmeticExpressions()
         XCTAssertTrue(expressions.count == 3, "Not 3 operands!")
-        let expectedExpressions = [ArithmeticObject.value(value: 3), ArithmeticObject.operator(operators: Operators.plus), ArithmeticObject.value(value: -2)]
+        let expectedExpressions = [ArithmeticExpression.value(value: 3), ArithmeticExpression.operation(operation: Operation.plus), ArithmeticExpression.value(value: -2)]
         XCTAssertEqual(expressions, expectedExpressions)
     }
     
