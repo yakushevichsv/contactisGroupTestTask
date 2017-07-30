@@ -1,26 +1,90 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="1pr-UU-uej">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.14"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="AvenirNext.ttc">
+            <string>AvenirNext-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <scene sceneID="tVC-xF-EMR">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="1pr-UU-uej" customClass="ViewController" customModule="Siri" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="JHC-o4-8Pn"/>
+                        <viewControllerLayoutGuide type="bottom" id="494-lc-xhS"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="fGZ-83-9V4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please say arithmetic expression" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUy-WI-JEz">
+                                <rect key="frame" x="20" y="59" width="335" height="92"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="92" id="fha-Xb-Emf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="This is the UITextView" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="U4h-UW-yTH">
+                                <rect key="frame" x="16" y="187" width="343" height="333.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Result" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m0N-rC-7fV">
+                                <rect key="frame" x="20" y="539.5" width="335" height="27.5"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3xi-f5-MaL">
+                                <rect key="frame" x="133" y="607" width="108" height="30"/>
+                                <state key="normal" title="Start Recording"/>
+                                <connections>
+                                    <action selector="microphoneTapped:" destination="1pr-UU-uej" eventType="touchUpInside" id="fU3-Jg-DPZ"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="gUy-WI-JEz" secondAttribute="trailing" constant="20" symbolic="YES" id="1Sh-xs-Ca3"/>
+                            <constraint firstItem="gUy-WI-JEz" firstAttribute="top" secondItem="JHC-o4-8Pn" secondAttribute="bottom" constant="39" id="4Y5-B3-Abx"/>
+                            <constraint firstItem="m0N-rC-7fV" firstAttribute="leading" secondItem="fGZ-83-9V4" secondAttribute="leading" constant="20" symbolic="YES" id="A3O-To-cfg"/>
+                            <constraint firstItem="m0N-rC-7fV" firstAttribute="top" relation="greaterThanOrEqual" secondItem="U4h-UW-yTH" secondAttribute="bottom" constant="1" id="Aud-jd-8JJ"/>
+                            <constraint firstItem="3xi-f5-MaL" firstAttribute="top" secondItem="m0N-rC-7fV" secondAttribute="bottom" constant="40" id="EsQ-Mg-7zW"/>
+                            <constraint firstItem="gUy-WI-JEz" firstAttribute="leading" secondItem="fGZ-83-9V4" secondAttribute="leading" constant="20" symbolic="YES" id="GoO-N7-ucK"/>
+                            <constraint firstItem="gUy-WI-JEz" firstAttribute="centerX" secondItem="fGZ-83-9V4" secondAttribute="centerX" id="Tdb-Wv-bI1"/>
+                            <constraint firstItem="3xi-f5-MaL" firstAttribute="centerX" secondItem="fGZ-83-9V4" secondAttribute="centerX" id="Z5C-id-MJ2"/>
+                            <constraint firstItem="U4h-UW-yTH" firstAttribute="top" secondItem="gUy-WI-JEz" secondAttribute="bottom" constant="36" id="a4u-5n-rkP"/>
+                            <constraint firstItem="U4h-UW-yTH" firstAttribute="centerX" secondItem="gUy-WI-JEz" secondAttribute="centerX" id="dwg-OC-Sdl"/>
+                            <constraint firstItem="U4h-UW-yTH" firstAttribute="height" secondItem="fGZ-83-9V4" secondAttribute="height" multiplier="0.5" priority="999" id="dzq-3b-X9d"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="U4h-UW-yTH" secondAttribute="trailing" id="gqN-lp-zLR"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="U4h-UW-yTH" secondAttribute="leading" id="olL-Tw-YCa"/>
+                            <constraint firstItem="494-lc-xhS" firstAttribute="top" secondItem="3xi-f5-MaL" secondAttribute="bottom" constant="30" id="qe4-ab-ILb"/>
+                            <constraint firstAttribute="trailing" secondItem="m0N-rC-7fV" secondAttribute="trailing" constant="20" symbolic="YES" id="yFD-YP-UJN"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="microphoneButton" destination="3xi-f5-MaL" id="Kn8-aP-Nby"/>
+                        <outlet property="resultOfExpressions" destination="m0N-rC-7fV" id="DGh-iq-Ubo"/>
+                        <outlet property="textView" destination="U4h-UW-yTH" id="Ymz-Xe-3T2"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LXf-jm-BNh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="138.98050974512745"/>
         </scene>
     </scenes>
 </document>
