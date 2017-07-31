@@ -17,6 +17,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))!
     
+    let analyzer = TextAnalyzer()
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
@@ -25,33 +26,51 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         super.viewDidLoad()
         
         microphoneButton.isEnabled = false
-        
+        let queue = OperationQueue()
+        queue.name = "vc.queue"
+        queue.maxConcurrentOperationCount = 20
+        speechRecognizer.queue = OperationQueue()
         speechRecognizer.delegate = self
         
-        SFSpeechRecognizer.requestAuthorization { (authStatus) in
-            
-            var isButtonEnabled = false
-            
-            switch authStatus {
-            case .authorized:
-                isButtonEnabled = true
+        
+        if SFSpeechRecognizer.authorizationStatus() == .notDetermined {
+            SFSpeechRecognizer.requestAuthorization { (authStatus) in
                 
-            case .denied:
-                isButtonEnabled = false
-                print("User denied access to speech recognition")
+                var isButtonEnabled = false
                 
-            case .restricted:
-                isButtonEnabled = false
-                print("Speech recognition restricted on this device")
+                switch authStatus {
+                case .authorized:
+                    isButtonEnabled = true
+                    
+                case .denied:
+                    isButtonEnabled = false
+                    print("User denied access to speech recognition")
+                    
+                case .restricted:
+                    isButtonEnabled = false
+                    print("Speech recognition restricted on this device")
+                    
+                case .notDetermined:
+                    isButtonEnabled = false
+                    print("Speech recognition not yet authorized")
+                }
                 
-            case .notDetermined:
-                isButtonEnabled = false
-                print("Speech recognition not yet authorized")
+                OperationQueue.main.addOperation() {
+                    self.microphoneButton.isEnabled = isButtonEnabled
+                }
             }
-            
-            OperationQueue.main.addOperation() {
-                self.microphoneButton.isEnabled = isButtonEnabled
+        }
+        else if SFSpeechRecognizer.authorizationStatus() != .authorized {
+            let alertVC = UIAlertController(title: "Warning", message: "Please allow speech recognition", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertVC.addAction(okAction)
+            if (self.presentedViewController != nil) {
+                self.dismiss(animated: false, completion: nil)
             }
+            self.present(alertVC, animated: true, completion: nil)
+        }
+        else {
+            microphoneButton.isEnabled = true
         }
     }
     
@@ -93,36 +112,40 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             fatalError("Unable to create an SFSpeechAudioBufferRecognitionRequest object")
         } //5
         
-        recognitionRequest.shouldReportPartialResults = false  //6
+        recognitionRequest.shouldReportPartialResults = true  //6
         
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest, resultHandler: { (result, error) in  //7
             
             var isFinal = false  //8
+            var detectedText: String? = nil
             
             if result != nil {
-                
-                let oText = result?.bestTranscription.formattedString//.first?.formattedString  //9
-                
-                self.textView.text = oText
+                detectedText = result?.bestTranscription.formattedString//.first?.formattedString  //9
                 isFinal = (result?.isFinal)!
+                DispatchQueue.main.async { [unowned self]  in
+                   self.textView.text = detectedText
+                }
             }
             
             if error != nil || isFinal {  //10
-                self.audioEngine.stop()
-                inputNode.removeTap(onBus: 0)
+                DispatchQueue.main.async { [unowned self]  in
+                    self.audioEngine.stop()
+                    inputNode.removeTap(onBus: 0)
+                    self.recognitionRequest = nil
+                    self.recognitionTask = nil
+                    
+                    self.microphoneButton.isEnabled = true
+                }
                 
-                self.recognitionRequest = nil
-                self.recognitionTask = nil
-                
-                self.microphoneButton.isEnabled = true
-                
-                if let text = self.textView.text {
-                    let analyzer = TextAnalyzer(expression: text)
-                    /*analyzer.analyze(completion: {(value) in
+                if let text = detectedText {
+                    let convertedText = NativeSpeechAdapter.convertToWords(mixedText: text)
+                    self.analyzer.text = convertedText
+                    self.analyzer.analyze(completion: {(value) in
+                        let valueStr = TextAnalyzer.convertToString(value)
                         DispatchQueue.main.async { [unowned self]  in
-                            self.resultOfExpressions.text = "\(value)"
+                            self.resultOfExpressions.text = valueStr
                         }
-                    })*/
+                    })
                 }
             }
         })
@@ -145,11 +168,10 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
-        if available {
-            microphoneButton.isEnabled = true
-        } else {
-            microphoneButton.isEnabled = false
+        OperationQueue.main.addOperation() {
+            self.microphoneButton.isEnabled = available
         }
+        
     }
 }
 

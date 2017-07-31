@@ -10,7 +10,17 @@ import Foundation
 
 //MARK: - TextAnalyzer
 class TextAnalyzer {
-    let text: String
+    private var _text = ""
+    
+    var text: String {
+        set {
+            _text = newValue.lowercased()
+        }
+        get {
+            return _text
+        }
+    }
+    
     let queue: DispatchQueue
     
     let basicNumbers : [String: TextAnalyzer.NumberType] = ["one": 1,
@@ -81,9 +91,13 @@ class TextAnalyzer {
     typealias NumberType = Double
     typealias NumbersGroupTuple = (value1: NumberType?, value2: NumberType?, operation: Operation?)
     
+    convenience init() {
+        self.init(expression: "")
+    }
+    
     init(expression text:String) {
-        self.text = text.lowercased()
         self.queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
+        self.text = text
     }
     
     func analyze(completion:@escaping ((_ value: TextAnalyzer.NumberType)->Void)) {
@@ -99,6 +113,12 @@ class TextAnalyzer {
         let objects = createArithmeticExpressions()
         let result = process(arithmeticExpressions: objects)
         return result
+    }
+    
+    
+    class func convertToString(_ value : TextAnalyzer.NumberType) -> String {
+        //TODO: refactor this.
+        return TextAnalyzer().convertToString(value)
     }
     
     /*
@@ -418,11 +438,11 @@ class TextAnalyzer {
         if let opIndexes2 = detect(inObjects: newObjects).first {
             let fRangeValues = simplify(inObjects: newObjects, operationIndexes: opIndexes2)
             
-            assert(fRangeValues.count == 1 )
-            result = fRangeValues.first!.value
+            //assert(fRangeValues.count == 1 )
+            result = fRangeValues.first?.value ?? TextAnalyzer.NumberType(0)
         }
         else {
-            result = newObjects.first!.accessValue()!
+            result = newObjects.first?.accessValue() ?? TextAnalyzer.NumberType(0)
         }
         
         return result
@@ -541,7 +561,7 @@ class TextAnalyzer {
             var rValue = defValue
             if (innerIndex != objects.endIndex) {
                 let tIndex = objects.index(after: innerIndex)
-                if let value = objects[tIndex].accessValue() {
+                if tIndex != objects.endIndex , let value = objects[tIndex].accessValue() {
                     rValue = value
                 }
                 else {
