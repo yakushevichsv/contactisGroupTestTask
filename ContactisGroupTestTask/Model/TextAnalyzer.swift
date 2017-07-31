@@ -26,7 +26,12 @@ class TextAnalyzer {
                "eleven": 11,
                "twelve": 12,
                "thirteen":13,
+               "fourteen":14,
                "fifteen": 15,
+               "sixteen":16,
+               "seventeen": 17,
+               "eighteen":18,
+               "nineteen": 19,
                "twenty": 20,
                "thirty":30,
                "forty": 40,
@@ -36,7 +41,20 @@ class TextAnalyzer {
                "eighty": 80,
                "ninety":90]
     
-    let multipliersSingal : [String: TextAnalyzer.NumberType] = ["hundred"   : 100,
+
+    lazy var basicNumbersOpposite: [TextAnalyzer.NumberType: String] = {
+        
+        var result: [TextAnalyzer.NumberType: String] = [:]
+        
+        for basicPair in self.basicNumbers {
+            result[basicPair.value] = basicPair.key
+        }
+        
+        return result
+    }()
+    
+    let multipliersSingal : [String: TextAnalyzer.NumberType] =
+                            ["hundred"   : 1e+2,
                              "hundreds"  : 1e+2,
                              "thousands" : 1e+3,
                              "thousand"  : 1e+3 ,
@@ -46,6 +64,19 @@ class TextAnalyzer {
                              "billions"  : 1e+9,
                              "trillion"  : 1e+12,
                              "trillions" : 1e+12 ]
+    
+    
+    lazy var multipliersSignalOpposite: [TextAnalyzer.NumberType : String] = {
+       
+        var result: [TextAnalyzer.NumberType: String] = [:]
+        
+        for basicPair in self.multipliersSingal {
+            if (result[basicPair.value] == nil && basicPair.key.characters.last != "s") {
+                result[basicPair.value] = basicPair.key
+            }
+        }
+        return result
+    }()
     
     typealias NumberType = Double
     typealias NumbersGroupTuple = (value1: NumberType?, value2: NumberType?, operation: Operation?)
@@ -67,6 +98,110 @@ class TextAnalyzer {
     func analyzeInner() -> TextAnalyzer.NumberType {
         let objects = createArithmeticExpressions()
         let result = process(arithmeticExpressions: objects)
+        return result
+    }
+    
+    /*
+     Convert value to string representation
+     345 -> three hundred forty five....
+     * Can be done using 
+     * NSNumberFormatter *numberFormatter = [[NSNumberFormatter new];
+     * [numberFormatter setNumberStyle:NSNumberFormatterSpellOutStyle];
+    */
+    func convertToString(_ value : TextAnalyzer.NumberType) -> String {
+       var intValue = Int(value)
+        
+        assert(value == Double(intValue)) // support just only integer items...
+        
+        var digits = [Int]()
+        
+        var tempInt = intValue
+        while (tempInt != 0 ){
+            let newIntValue = tempInt/10
+            let reminder = tempInt - newIntValue * 10
+            digits.append(reminder)
+            tempInt = newIntValue
+        }
+        
+        digits.reverse()
+        
+        
+        let maxPower = digits.count - 1
+
+        let supportedPowers = [12, 9 , 6, 3, 2, 0]
+        
+        var index = supportedPowers.startIndex
+        //Can be thousand of trillions...
+        var providedPower =  maxPower
+        
+        var result = ""
+        var partStr = ""
+        
+        while (index != supportedPowers.endIndex && providedPower >= 0) {
+            let currentPower = supportedPowers[index]
+            
+            if (currentPower <=  providedPower) {
+                let divider = Int(pow(Double(10),Double(currentPower)))
+                let valuePart = intValue/divider
+                
+                partStr = ""
+                
+                if valuePart < 100 {
+                    if let fValueStr = self.basicNumbersOpposite[TextAnalyzer.NumberType(valuePart)] {
+                        partStr = fValueStr
+                    }
+                    else if (valuePart > 20) {
+                        let wholePart = valuePart/10
+                        let valueWithoutReminder = wholePart * 10
+                        let reminder = valuePart - valueWithoutReminder
+                        
+                        let decimalsStr = self.basicNumbersOpposite[TextAnalyzer.NumberType(valueWithoutReminder)]!
+                        let digitsStr = self.basicNumbersOpposite[TextAnalyzer.NumberType(reminder)]!
+                        
+                        partStr = "\(decimalsStr)-\(digitsStr)"
+                    }
+                    
+                    if (valuePart >= 10 ) {
+                        providedPower -= 2
+                    }
+                    else {
+                        providedPower -= 1
+                    }
+                }
+                else {
+                    partStr = convertToString(TextAnalyzer.NumberType(valuePart))
+                    
+                }
+                
+                if valuePart != 0, let str = self.multipliersSignalOpposite[TextAnalyzer.NumberType(divider)] {
+                    
+                    partStr.append(" ")
+                    partStr.append(str)
+                    /*if (valuePart != 1) {
+                        partStr.append("s")
+                    }*/
+                    
+                    if (!result.isEmpty) {
+                        result.append(" ")
+                    }
+                    result.append(partStr)
+                    partStr = ""
+                }
+                
+                
+                intValue -= valuePart * divider
+            }
+            
+            index = supportedPowers.index(after: index)
+        }
+        
+        if (!partStr.isEmpty) {
+            if (!result.isEmpty) {
+                result.append(" ")
+            }
+            result.append(partStr)
+        }
+        
         return result
     }
     

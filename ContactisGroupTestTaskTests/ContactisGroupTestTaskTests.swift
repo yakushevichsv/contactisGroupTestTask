@@ -145,16 +145,42 @@ class ContactisGroupTestTaskTests: XCTestCase {
         XCTAssertTrue(value == 1, "Not equal to one!")
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    //MARK: - Convert value to string
+    func testConvertToString6() {
+        let analyzer = TextAnalyzer(expression: "Six")
+        let str = analyzer.convertToString(6)
+        
+        XCTAssertEqual(str, analyzer.text.lowercased())
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testConvertToString24() {
+        let analyzer = TextAnalyzer(expression: "Twenty-Four")
+        let str = analyzer.convertToString(24)
+        
+        XCTAssertEqual(str, analyzer.text.lowercased())
     }
+    
+    func testConvertToString77K() {
+        let analyzer = TextAnalyzer(expression: "Seventy-Seven thousand")
+        let str = analyzer.convertToString(77000)
+        
+        XCTAssertEqual(str, analyzer.text.lowercased())
+    }
+    
+    func testConvertToString624() {
+        let analyzer = TextAnalyzer(expression: "Six Hundred twenty-four")
+        let str = analyzer.convertToString(624)
+        
+        XCTAssertEqual(str, analyzer.text.lowercased())
+    }
+    
+    func testConvertToStringLongValue() {
+        let analyzer = TextAnalyzer(expression: "Eleven million two hundred forty-two thousand forty-three")
+        let str = analyzer.convertToString(11242043)
+        
+        XCTAssertEqual(str, analyzer.text.lowercased())
+    }
+    
     
 }
