@@ -89,7 +89,6 @@ class TextAnalyzer {
     }()
     
     typealias NumberType = Double
-    typealias NumbersGroupTuple = (value1: NumberType?, value2: NumberType?, operation: Operation?)
     
     convenience init() {
         self.init(expression: "")

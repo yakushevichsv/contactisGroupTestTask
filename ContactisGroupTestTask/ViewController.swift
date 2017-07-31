@@ -44,18 +44,19 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                     
                 case .denied:
                     isButtonEnabled = false
-                    print("User denied access to speech recognition")
-                    
+                    debugPrint("User denied access to speech recognition")
+                    break
                 case .restricted:
                     isButtonEnabled = false
-                    print("Speech recognition restricted on this device")
-                    
+                    debugPrint("Speech recognition restricted on this device")
+                    break
                 case .notDetermined:
                     isButtonEnabled = false
-                    print("Speech recognition not yet authorized")
+                    debugPrint("Speech recognition not yet authorized")
+                    break
                 }
                 
-                OperationQueue.main.addOperation() {
+                DispatchQueue.main.async { [unowned self] in
                     self.microphoneButton.isEnabled = isButtonEnabled
                 }
             }
@@ -75,15 +76,21 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     @IBAction func microphoneTapped(_ sender: AnyObject) {
+        var titleText = " Recording"
+        var actionName: String!
         if audioEngine.isRunning {
             audioEngine.stop()
             recognitionRequest?.endAudio()
             microphoneButton.isEnabled = false
-            microphoneButton.setTitle("Start Recording", for: .normal)
+            actionName = "Start"
         } else {
             startRecording()
-            microphoneButton.setTitle("Stop Recording", for: .normal)
+            actionName = "Stop"
+            textView.text = nil
         }
+        
+        titleText.insert(contentsOf: actionName, at: titleText.startIndex)
+        microphoneButton.setTitle(titleText, for: .normal)
     }
     
     func startRecording() {
@@ -99,7 +106,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             try audioSession.setMode(AVAudioSessionModeMeasurement)
             try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
         } catch {
-            print("audioSession properties weren't set because of an error.")
+            debugPrint("audioSession properties weren't set because of an error. \(error)")
         }
         
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()  //3
@@ -160,7 +167,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         do {
             try audioEngine.start()
         } catch {
-            print("audioEngine couldn't start because of an error.")
+            debugPrint("audioEngine couldn't start because of an error.\(error)")
         }
         
         textView.text = "Say something, I'm listening!"
@@ -168,10 +175,9 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
-        OperationQueue.main.addOperation() {
+        DispatchQueue.main.async { [unowned self]  in
             self.microphoneButton.isEnabled = available
         }
-        
     }
 }
 
