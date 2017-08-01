@@ -416,7 +416,8 @@ class TextAnalyzer {
         var result = TextAnalyzer.NumberType(0)
         
         if let fIndexes = opIndexes.first {
-            let fRangeValues = simplify(inObjects: objects, operationIndexes: fIndexes)
+            let fRangeValues = simplify(inObjects: objects, operationIndexes: fIndexes) //TODO: should have a flag... No need to process all operations, just multiplication. 
+            //During second call addition, and substraction.
             
             var prevRange = objects.startIndex
             
